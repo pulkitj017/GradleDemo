@@ -1,5 +1,11 @@
 plugins {
     id 'java'
+
+    // Plugin to check outdated dependencies
+    id 'com.github.ben-manes.versions' version '0.48.0'
+
+    // Plugin for license reports
+    id 'com.github.jk1.dependency-license-report' version '1.7'
 }
 
 group = 'org.example'
@@ -31,4 +37,13 @@ jar {
 
 test {
     useJUnitPlatform()
+}
+
+// === Plugin Configuration for SBOM and License Reports ===
+licenseReport {
+    outputDir = "$buildDir/reports/dependency-license"
+    renderers = [
+        new com.github.jk1.license.render.TextReportRenderer(),  // Text format
+        new com.github.jk1.license.render.JsonReportRenderer()   // JSON format
+    ]
 }
