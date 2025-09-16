@@ -55,8 +55,7 @@ jobs:
           gradle -v
           chmod +x gradlew
           ./gradlew build
-          ./gradlew jar
-          java -jar build/libs/filename.jar
+          
 
 
       - name: Run get-details-1.sh
