@@ -58,6 +58,7 @@ jobs:
 
       - name: Run get-details-1.sh
         run: |
+          ls -l dependency-updates
           bash ./get-details-1.sh
           echo "After get-details-1.sh:"
           ls -l
