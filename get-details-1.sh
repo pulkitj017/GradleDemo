@@ -4,7 +4,7 @@
 bash ./gradlew dependencyUpdates > outdated.txt
 bash ./gradlew generateLicenseReport
 # Input and output files
-input_file="outdated.txt"
+input_file="dependency-updates/report.txt"
 output_file="outdated_dependencies_report.txt"
 
 # Initialize the output file with headers
