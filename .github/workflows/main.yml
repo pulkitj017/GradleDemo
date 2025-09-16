@@ -65,6 +65,9 @@ jobs:
       - name: Run get-details-2.sh
         run: |
           ls -l dependency-updates
+          cat dependency-updates/report.txt
+          cat outdated.txt
+          cat outdated_dependencies_report.txt
           bash ./get-details-2.sh
           echo "After get-details-2.sh:"
           ls -l
