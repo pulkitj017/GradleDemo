@@ -2,7 +2,7 @@ plugins {
     id 'java'
 
     // Plugin to check outdated dependencies
-    id 'com.github.ben-manes.versions' version '0.48.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
 
     // Plugin for license reports
     id "com.github.jk1.dependency-license-report" version "2.8"
