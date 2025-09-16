@@ -28,16 +28,26 @@ jobs:
         with:
           name: project
 
-      - name: Install Java + Gradle
+      - name: Install Java + utilities
         run: |
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get update && apt-get install -y git curl sudo gawk wget libicu70 unzip openjdk-8-jdk
+          sudo apt-get update
+          sudo apt-get install -y git curl sudo gawk wget libicu70 unzip openjdk-17-jdk
+      
+      - name: Uninstall preinstalled Gradle
+        run: |
+          sudo rm -rf /usr/share/gradle
+          sudo rm -rf /usr/local/gradle
+          which gradle && gradle -v || echo "Gradle removed"
+      
+      - name: Install Gradle 7.0.2
+        run: |
           wget https://services.gradle.org/distributions/gradle-7.0.2-bin.zip
           unzip gradle-7.0.2-bin.zip
-          mv gradle-7.0.2 /opt/gradle
-          export PATH=$PATH:/opt/gradle/bin
-          gradle -v || echo "Gradle setup verified"
+          sudo mv gradle-7.0.2 /opt/gradle
+          echo "PATH=/opt/gradle/bin:$PATH" >> $GITHUB_ENV
+          gradle -v
           gradle build || echo "Gradle build failed or skipped"
+
 
       - name: Run get-details-1.sh
         run: |
