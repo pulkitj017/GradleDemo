@@ -1,6 +1,7 @@
 #!/bin/bash
 ./gradlew build || echo "Gradle build failed or skipped"
 ./gradlew dependencies --write-locks || echo "Gradle lock generation skipped"
+./gradlew dependencyUpdates --refresh-dependencies --info
 bash ./gradlew dependencyUpdates > outdated.txt
 bash ./gradlew generateLicenseReport
 # Input and output files
