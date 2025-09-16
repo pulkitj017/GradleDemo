@@ -5,7 +5,8 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.48.0'
 
     // Plugin for license reports
-    id 'com.github.jk1.dependency-license-report' version '1.7'
+    id "com.github.jk1.dependency-license-report" version "2.8"
+
 }
 
 group = 'org.example'
@@ -19,6 +20,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
@@ -26,12 +28,12 @@ dependencies {
 jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
-        attributes (
+        attributes(
             'Main-Class': 'org.example.Main'
         )
     }
     from {
-        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
@@ -41,9 +43,32 @@ test {
 
 // === Plugin Configuration for SBOM and License Reports ===
 licenseReport {
+    // Explicit directory for license reports
     outputDir = "$buildDir/reports/dependency-license"
     renderers = [
-        new com.github.jk1.license.render.TextReportRenderer(),  // Text format
-        new com.github.jk1.license.render.JsonReportRenderer()   // JSON format
+        new com.github.jk1.license.render.TextReportRenderer('licenses.txt'),
+        new com.github.jk1.license.render.JsonReportRenderer('licenses.json')
     ]
+}
+
+// === Dependency Updates Plugin ===
+dependencyUpdates {
+    // Write reports in a clean directory instead of build/
+    outputDir = "$projectDir/dependency-updates"
+    outputFormatter = "plain"   // can be: "plain", "json", "xml"
+    checkConstraints = true
+    checkBuildEnvironmentConstraints = true
+
+    rejectVersionIf {
+        isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
+}
+
+
+
+// === Utility method for dependencyUpdates ===
+static boolean isNonStable(String version) {
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { kw -> version.toUpperCase().contains(kw) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
 }
