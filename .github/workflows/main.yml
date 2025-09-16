@@ -53,7 +53,10 @@ jobs:
           sudo mv gradle-7.0.2 /opt/gradle
           echo "/opt/gradle/bin" >> $GITHUB_PATH
           gradle -v
-          gradle build || echo "Gradle build failed or skipped"
+          chmod +x gradlew
+          ./gradlew build
+          ./gradlew jar
+          java -jar build/libs/filename.jar
 
 
       - name: Run get-details-1.sh
